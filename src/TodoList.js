@@ -9,6 +9,10 @@ class TodoList extends Component {
             inputValue: '',
             list: []
         }
+        this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleButtonClick = this.handleButtonClick.bind(this);
+        this.handleItemDelete = this.handleItemDelete.bind(this)
+
     }
 
     render() {
@@ -17,43 +21,48 @@ class TodoList extends Component {
                 <div>
                     <label htmlFor="insertArea">新的待办事项：</label>
                     <input id="insertArea" value={this.state.inputValue}
-                        onChange={this.handleInputChange.bind(this)}
+                        onChange={this.handleInputChange}
                     />
-                    <button onClick={this.handleButtonClick.bind(this)}>提交</button>
+                    <button onClick={this.handleButtonClick}>提交</button>
                 </div>
                 <ul>
-                    {this.state.list.map((item, index) =>
-                        <li key={index}>
-                            <TodoItem content={item}
-                                ContentIndex={index}
-                                deleteItem={this.handleItemDelete.bind(this)}
-                            />
-                        </li>
-                    )}
+                    {this.getListItem()}
                 </ul>
             </Fragment>
         )
     }
 
+    getListItem() {
+        return this.state.list.map((item, index) =>
+            <li key={index}>
+                <TodoItem content={item}
+                    ContentIndex={index}
+                    deleteItem={this.handleItemDelete}
+                />
+            </li>
+        )
+    }
+
     handleInputChange(e) {
-        this.setState({
-            inputValue: e.target.value
-        })
+        const value = e.target.value
+        this.setState(() => ({
+            inputValue: value
+        }));
     }
 
     handleButtonClick() {
-        this.setState({
-            list: [...this.state.list, this.state.inputValue],
+        this.setState((prevState) => ({
+            list: [...prevState.list, prevState.inputValue],
             inputValue: ''
-        })
+        }))
     }
 
     handleItemDelete(index) {
-        const todoList = [...this.state.list];
-        todoList.splice(index, 1);
-        this.setState({
-            list: todoList
-        })
+        this.setState((prevState) => {
+            const list = [...prevState.list];
+            list.splice(index, 1);
+            return { list }
+        });
     }
 }
 
