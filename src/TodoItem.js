@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class TodoItem extends Component {
 
@@ -7,11 +8,20 @@ class TodoItem extends Component {
         this.handleDelete = this.handleDelete.bind(this);
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        if (nextProps.content !== this.props.content) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     render() {
-        const { content } = this.props;
+        const { content, todo } = this.props;
         return (
-            <div onClick={this.handleDelete}>
-                {content}
+            <div>
+                <span>{todo} : {content}</span>
+                <button onClick={this.handleDelete}> 删除 </button>
             </div>
         )
     }
@@ -22,4 +32,13 @@ class TodoItem extends Component {
     }
 }
 
+TodoItem.propTypes = {
+    content: PropTypes.string,
+    deleteItem: PropTypes.func,
+    ContentIndex: PropTypes.number
+}
+
+TodoItem.defaultProps = {
+    todo: '待办'
+}
 export default TodoItem;
