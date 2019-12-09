@@ -1,19 +1,20 @@
 import React, { Component, Fragment } from 'react'
 
 import 'antd/dist/antd.css'
-import { Input, Button, List, Typography,Tag } from 'antd'
+import { Input, Button, List, Typography, Tag } from 'antd'
+
+import store from './store/index'
 
 class TodoList extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            inputValue: '',
-            list: []
-        }
+        this.state = store.getState();
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleButtonClick = this.handleButtonClick.bind(this);
-        this.handleItemDelete = this.handleItemDelete.bind(this)
+        this.handleItemDelete = this.handleItemDelete.bind(this);
+        this.handStoreChange = this.handStoreChange.bind(this);
+        store.subscribe(this.handStoreChange);
     }
 
     render() {
@@ -26,13 +27,13 @@ class TodoList extends Component {
                     <Button type="primary" onClick={this.handleButtonClick}>提交</Button>
                 </div>
                 <List
-                    style={{marginTop:'16px',marginLeft: '16px', width:'300px'}}
+                    style={{ marginTop: '16px', marginLeft: '16px', width: '300px' }}
                     bordered
                     dataSource={this.state.list}
                     renderItem={item => (
                         <List.Item onClick={this.handleItemDelete}>
                             <Typography.Text mark>待办:</Typography.Text> {item}
-                            <Tag style={{marginLeft:'8px'}}>单击删除</Tag>
+                            <Tag style={{ marginLeft: '8px' }}>单击删除</Tag>
                         </List.Item>
                     )}
                 />
@@ -41,17 +42,18 @@ class TodoList extends Component {
     }
 
     handleInputChange(e) {
-        const value = e.target.value
-        this.setState(() => ({
-            inputValue: value
-        }));
+        const action = {
+            type: 'change_input_value',
+            value: e.target.value
+        }
+        store.dispatch(action);
     }
 
     handleButtonClick() {
-        this.setState((prevState) => ({
-            list: [...prevState.list, prevState.inputValue],
-            inputValue: ''
-        }))
+        const action ={
+            type: 'update_todo_list'
+        }
+        store.dispatch(action);
     }
 
     handleItemDelete(index) {
@@ -60,6 +62,10 @@ class TodoList extends Component {
             list.splice(index, 1);
             return { list }
         });
+    }
+
+    handStoreChange(){
+        this.setState(store.getState());
     }
 }
 
