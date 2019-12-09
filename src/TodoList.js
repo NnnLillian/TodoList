@@ -1,9 +1,7 @@
-import React, { Component, Fragment } from 'react';
-import TodoItem from './TodoItem';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import axios from 'axios';
+import React, { Component, Fragment } from 'react'
 
-import './style.css';
+import 'antd/dist/antd.css'
+import { Input, Button, List, Typography,Tag } from 'antd'
 
 class TodoList extends Component {
 
@@ -21,49 +19,24 @@ class TodoList extends Component {
     render() {
         return (
             <Fragment>
-                <div>
-                    <label htmlFor="insertArea">新的待办事项：</label>
-                    <input id="insertArea" value={this.state.inputValue}
+                <div style={{ marginTop: "16px", marginLeft: '16px' }}>
+                    <Input placeholder="新增待办事项" style={{ width: '300px', marginRight: '16px' }} value={this.state.inputValue}
                         onChange={this.handleInputChange}
                     />
-                    <button onClick={this.handleButtonClick}>提交</button>
+                    <Button type="primary" onClick={this.handleButtonClick}>提交</Button>
                 </div>
-                {/* <div>
-                    <div>HELLO</div>
-                    <button className={this.state.show} onClick={this.handleButtonClick}>change</button>
-                </div> */}
-                <ul>
-                    <TransitionGroup>
-                        {this.getListItem()}
-                    </TransitionGroup>
-                </ul>
+                <List
+                    style={{marginTop:'16px',marginLeft: '16px', width:'300px'}}
+                    bordered
+                    dataSource={this.state.list}
+                    renderItem={item => (
+                        <List.Item onClick={this.handleItemDelete}>
+                            <Typography.Text mark>待办:</Typography.Text> {item}
+                            <Tag style={{marginLeft:'8px'}}>单击删除</Tag>
+                        </List.Item>
+                    )}
+                />
             </Fragment>
-        )
-    }
-
-    componentDidMount() {
-        axios.get('api/todolist')
-            .then((res) => (
-                console.log(res.data)
-            ))
-            .catch(() => { alert('error') })
-    }
-
-    getListItem() {
-        return this.state.list.map((item, index) =>
-
-            <CSSTransition
-                timeout={1000}
-                classNames="my-node"
-                key={item}
-            >
-                <li>
-                    <TodoItem content={item}
-                        ContentIndex={index}
-                        deleteItem={this.handleItemDelete}
-                    />
-                </li>
-            </CSSTransition>
         )
     }
 
