@@ -14,5 +14,9 @@ export default (state = defaultState, action) => {
         newState.inputValue = "";
         state = newState;
     }
+    if (action.type === "delete_todo_item") {
+        newState.list.splice(action.index, 1);
+        state = newState;
+    }
     return state;
 }
