@@ -17,7 +17,7 @@ const TodoListUI = (props) => {
                 bordered
                 dataSource={props.list}
                 renderItem={(item, index) => (
-                    <List.Item onClick={(index) => { props.handleItemDelete(index) }}>
+                    <List.Item onClick={() => { props.handleItemDelete(index) }}>
                         <Typography.Text mark > 待办: </Typography.Text>{item}
                         <Tag style={{ marginLeft: '8px' }} > 单击删除 </Tag>
                     </List.Item>
