@@ -1,28 +1,32 @@
-import { CHANGE_INPUT_VALUE, UPDATE_TODO_LIST, DELETE_TODO_ITEM, INIT_LIST } from './actionTypes'
+import * as actionTypes from './actionTypes';
+import {
+    fromJS,
+    List
+} from 'immutable';
 
-const defaultState = {
+const defaultState = fromJS({
     inputValue: '',
     list: []
-}
+})
 
 export default (state = defaultState, action) => {
-    const newState = JSON.parse(JSON.stringify(state));
-    if (action.type === CHANGE_INPUT_VALUE) {
-        newState.inputValue = action.value;
-        return newState;
+    switch (action.type) {
+        case actionTypes.CHANGE_INPUT_VALUE:
+            return state.set('inputValue', action.value);
+
+        case (action.type === actionTypes.UPDATE_TODO_LIST):
+            return state.merge({
+                list: List(state.get('list')).push(state.get('inputValue')),
+                // list: state.get('list').concat(state.get('inputValue')),
+                inputValue: fromJS('')
+            });
+        case (action.type === actionTypes.DELETE_TODO_ITEM):
+            return state.merge({
+                list: List(state.get('list')).delete(action.index)
+            });
+        case (action.type === actionTypes.INIT_LIST):
+            return state.set('list', action.data);
+        default:
+            return state;
     }
-    if (action.type === UPDATE_TODO_LIST) {
-        newState.list.push(newState.inputValue);
-        newState.inputValue = "";
-        return newState;
-    }
-    if (action.type === DELETE_TODO_ITEM) {
-        newState.list.splice(action.index, 1);
-        return newState;
-    }
-    if (action.type === INIT_LIST) {
-        newState.list = action.data
-        return newState;
-    }
-    return state;
 }

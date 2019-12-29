@@ -2,15 +2,13 @@ import React, { Component } from 'react'
 
 import TodoListUI from './TodoListUI'
 import { connect } from 'react-redux';
-import store from './store/index'
-import { getInputChangeAction, getAddAction, deleteItem, getInitListAction } from './store/actionCreators'
+import * as actionCreators from './store/actionCreators';
 
 class TodoList extends Component {
 
     render() {
 
         const { inputValue, list, handleButtonClick, handleInputChange, handleItemDelete } = this.props
-
         return (
             <TodoListUI
                 inputValue={inputValue}
@@ -23,33 +21,32 @@ class TodoList extends Component {
     }
 
     componentDidMount() {
-        const action = getInitListAction();
-        store.dispatch(action);
+        this.props.getInitList()
     }
 }
 
 const mapStateToProps = (state) => {
     return {
-        inputValue: state.inputValue,
-        list: state.list
+        inputValue: state.get('inputValue'),
+        list: state.get('list'),
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
+        getInitList(){
+            dispatch(actionCreators.getInitListAction());
+        },
         handleInputChange(e) {
-            const action = getInputChangeAction(e.target.value);
-            dispatch(action);
+            dispatch(actionCreators.getInputChangeAction(e.target.value));
         },
 
         handleButtonClick() {
-            const action = getAddAction();
-            dispatch(action);
+            dispatch(actionCreators.getAddAction());
         },
 
         handleItemDelete(index) {
-            const action = deleteItem(index);
-            dispatch(action);
+            dispatch(actionCreators.deleteItem(index));
         }
     }
 }
