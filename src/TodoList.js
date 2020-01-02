@@ -1,6 +1,7 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 
 import TodoListUI from './TodoListUI'
+import Footer from './Footer';
 import { connect } from 'react-redux';
 import * as actionCreators from './store/actionCreators';
 
@@ -8,20 +9,40 @@ class TodoList extends Component {
 
     render() {
 
-        const { inputValue, list, handleButtonClick, handleInputChange, handleItemDelete } = this.props
+        const { inputValue, list, filter, handleButtonClick, handleInputChange, handleItemDelete, handleCompleteChange, setVisibilityFilter } = this.props
         return (
-            <TodoListUI
-                inputValue={inputValue}
-                list={list}
-                handleInputChange={handleInputChange}
-                handleButtonClick={handleButtonClick}
-                handleItemDelete={handleItemDelete}
-            />
+            <Fragment>
+                <TodoListUI
+                    inputValue={inputValue}
+                    list={this.GetVisibleList(list,filter)}
+                    handleInputChange={handleInputChange}
+                    handleButtonClick={handleButtonClick}
+                    handleItemDelete={handleItemDelete}
+                    handleCompleteChange={handleCompleteChange}
+                    handleItemChange={handleCompleteChange}
+                />
+                <Footer
+                    setVisibilityFilter={setVisibilityFilter}
+                    filter={filter}
+                />
+            </Fragment>
         )
     }
 
     componentDidMount() {
         this.props.getInitList()
+    }
+
+    GetVisibleList = (list, filter) => {
+        return list.filter((item) => {
+            if (filter === "active") {
+                return !item.complete;
+            } else if (filter === "complete") {
+                return item.complete;
+            } else {
+                return true;
+            }
+        })
     }
 }
 
@@ -29,12 +50,13 @@ const mapStateToProps = (state) => {
     return {
         inputValue: state.get('inputValue'),
         list: state.get('list'),
+        filter: state.get('filter'),
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        getInitList(){
+        getInitList() {
             dispatch(actionCreators.getInitListAction());
         },
         handleInputChange(e) {
@@ -47,6 +69,12 @@ const mapDispatchToProps = (dispatch) => {
 
         handleItemDelete(index) {
             dispatch(actionCreators.deleteItem(index));
+        },
+        handleCompleteChange(index) {
+            dispatch(actionCreators.changeItem(index));
+        },
+        setVisibilityFilter(filter) {
+            dispatch(actionCreators.changeFilter(filter));
         }
     }
 }

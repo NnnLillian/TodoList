@@ -1,8 +1,34 @@
-[
-    "first",
-    "second",
-    "third",
-    "four",
-    "five",
-    "six"
-]
+{
+    "todolist": [
+        {
+            "id": 1,
+            "text": "first",
+            "complete": true
+        },
+        {
+            "id": 2,
+            "text": "second",
+            "complete": true
+        },
+        {
+            "id": 3,
+            "text": "third",
+            "complete": false
+        },
+        {
+            "id": 4,
+            "text": "four",
+            "complete": true
+        },
+        {
+            "id": 5,
+            "text": "five",
+            "complete": true
+        },
+        {
+            "id": 6,
+            "text": "six",
+            "complete": false
+        }
+    ]
+}

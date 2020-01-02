@@ -15,9 +15,19 @@ export const deleteItem = (index) => ({
     index
 })
 
+export const changeItem = (index) => ({
+    type: actionTypes.CHANGE_ITEM,
+    index
+})
+
+export const changeFilter = (filter) => ({
+    type: actionTypes.CHANGE_FILTER,
+    filter
+})
+
 const initListAction = (data) => ({
     type: actionTypes.INIT_LIST,
-    data
+    todoList: data.todolist,
 })
 
 export const getInitListAction = () => {

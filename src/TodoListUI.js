@@ -13,13 +13,18 @@ const TodoListUI = (props) => {
                 />
                 <Button type="primary" onClick={props.handleButtonClick}> 提交 </Button>
             </div>
-            <List style={{ marginTop: '16px', marginLeft: '16px', width: '300px' }}
+            <List style={{ marginTop: '16px', marginLeft: '16px', width: '376px' }}
                 bordered
                 dataSource={props.list}
                 renderItem={(item, index) => (
-                    <List.Item onClick={() => { props.handleItemDelete(index) }}>
-                        <Typography.Text mark > 待办: </Typography.Text>{item}
-                        <Tag style={{ marginLeft: '8px' }} > 单击删除 </Tag>
+                    <List.Item
+                        onDoubleClick={() => { props.handleItemDelete(index) }}
+                        onClick={() => { props.handleItemChange(index) }}
+                        style={{ display: "block" }}
+                    >
+                        {item.complete ? <Typography.Text delete disabled>完成: {item.text}</Typography.Text> : <Typography.Text mark>待办: {item.text}</Typography.Text >}
+                        <Tag color="volcano" style={{ float: "right", display: "block" }} > 双击删除 </Tag>
+                        <Tag color="gold" style={{ float: "right", display: "block" }} > 单击修改状态 </Tag>
                     </List.Item>
                 )}
             />
